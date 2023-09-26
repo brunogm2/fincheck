@@ -1,7 +1,5 @@
 import ilustration from '../../assets/ilustration.png';
 
-import { Outlet } from 'react-router-dom';
-
 export function AuthLayout() {
     return(
         <div className="flex w-full h-full">
@@ -16,7 +14,7 @@ export function AuthLayout() {
                 />
 
                 <div className="max-w-[656px] bg-white bottom-8 p-10 absolute rounded-b-[32px]">
-                    <p>
+                    <p className="text-gray-700 font-medium text-">
                         Gerencie suas finanças pessoais de uma forma simples
                         com o fincheck, e o melhor, totalmente de graça!
                     </p>
