@@ -9,13 +9,13 @@ import { BankAccount } from '@prisma/client';
 @Injectable()
 export class BankAccountsService {
   constructor(
-    private readonly bankAccountsRepo: BankAccountsRepository, 
+    private readonly bankAccountsRepo: BankAccountsRepository,
     private readonly validateBankAccountOwnershipService: ValidateBankAccountOwnershipService
   ) {}
 
   create(userId: string, createBankAccountDto: CreateBankAccountDto) {
     const { color, initialBalance, name, type } = createBankAccountDto;
-    
+
     return this.bankAccountsRepo.create({
       data: {
         userId,
@@ -40,15 +40,15 @@ export class BankAccountsService {
         },
       },
     });
-  
+
     return bankAccounts.map((bankAccount) => {
       const currentBalance = 0;
-      
+
       // const totalTransactions = bankAccount.transactions.reduce(
       //   (acc, transaction) => acc + transaction.value,
       //   0,
       // );
-  
+
       return {
         ...bankAccount,
         // totalTransactions,
@@ -58,8 +58,8 @@ export class BankAccountsService {
   }
 
   async update(
-    userId: string, 
-    bankAccountId: string, 
+    userId: string,
+    bankAccountId: string,
     updateBankAccountDto: UpdateBankAccountDto
   ) {
     this.validateBankAccountOwnershipService.validate(userId, bankAccountId);
@@ -69,9 +69,9 @@ export class BankAccountsService {
     return this.bankAccountsRepo.update({
       where: { id: bankAccountId },
       data: {
-        color, 
-        initialBalance, 
-        name, 
+        color,
+        initialBalance,
+        name,
         type
       }
     });
