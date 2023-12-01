@@ -6,6 +6,7 @@ import { authService } from "../../../app/services/authService";
 import { useMutation } from "@tanstack/react-query";
 import { SignupParams } from "../../../app/services/authService/signup";
 import { toast } from "react-hot-toast";
+import { useAuth } from "../../../app/hooks/useAuth";
 
 const schema = z.object({
     name: z.string().nonempty('Nome é obrigatorio!'),
@@ -16,28 +17,30 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export function useRegisterController() {
-    const {
-        handleSubmit: hookFormHandleSubmit,
-        register,
-        formState: { errors },
-     } = useForm<FormData>({
-        resolver: zodResolver(schema)
-     });
+      const {
+         handleSubmit: hookFormHandleSubmit,
+         register,
+         formState: { errors },
+      } = useForm<FormData>({
+         resolver: zodResolver(schema)
+      });
 
-     const { mutateAsync, isPending } = useMutation({
+      const { mutateAsync, isPending } = useMutation({
          mutationFn: async (data: SignupParams) => {
             return authService.signup(data);
          },
       });
 
-     const handleSubmit = hookFormHandleSubmit(async (data) => {
-         try {
-            const { accessToken } = await mutateAsync(data);
-            console.log(accessToken);
-         } catch (error) {
-            toast.error('Ocorreu um erro ao criar sua conta!');
-         }
-     });     
+      const { signin } = useAuth();
 
-     return { register, errors, handleSubmit, isPending }
+      const handleSubmit = hookFormHandleSubmit(async (data) => {
+            try {
+               const { accessToken } = await mutateAsync(data);
+               signin(accessToken);
+            } catch (error) {
+               toast.error('Ocorreu um erro ao criar sua conta!');
+            }
+      });     
+
+      return { register, errors, handleSubmit, isPending }
 }
